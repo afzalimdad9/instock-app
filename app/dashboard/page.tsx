@@ -10,7 +10,6 @@ import { useRouter } from 'next/navigation'
 import Loading from './Loading'
 import { Sales, getCategories, getProducts, getSales, getTotalSales, User } from '@/utils'
 
-    
 export default function Dashboard() {
     const [addNew, setAddNew] = useState<boolean>(false)
     const [products, setProducts] = useState([])
@@ -20,32 +19,32 @@ export default function Dashboard() {
     const openModal = () => setAddNew(true)
     const [user, setUser] = useState<User>()
     const router = useRouter()
-    
-	const isUserLoggedIn = useCallback(() => {
-		onAuthStateChanged(auth, async (user) => {
+
+    const isUserLoggedIn = useCallback(() => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUser({ email: user.email, uid: user.uid });
                 const promises = [getProducts(setProducts), getCategories(setCategories), getTotalSales(setTotalSales), getSales(setSales)];
                 await Promise.all(promises);
-                
-			} else {
-				return router.push("/");
-			}
-		});
-	}, [router]);
 
-	useEffect(() => {
+            } else {
+                return router.push("/");
+            }
+        });
+    }, [router]);
+
+    useEffect(() => {
         isUserLoggedIn();
-	}, [isUserLoggedIn]);
+    }, [isUserLoggedIn]);
 
-    if(!user?.email) return <Loading/>
+    if (!user?.email) return <Loading />
     return (
         <main className='flex w-full min-h-[100vh] relative'>
-          <SideNav/>
-            
+            <SideNav />
+
             <div className='md:w-[85%] w-full py-4 px-6 min-h-[100vh] bg-[#f4f4f6]'>
                 <Header title='Dashboard' />
-               
+
                 <div className='flex items-center md:flex-row flex-col justify-between w-full md:space-x-4 mb-8'>
                     <div className='bg-white md:w-1/3 w-full h-[200px] shadow rounded p-3 hover:shadow-lg md:my-auto my-2'>
                         <h3 className='text-[#9AA8BD] mb-10'>Total Sales</h3>
@@ -74,13 +73,13 @@ export default function Dashboard() {
                                         #{sale.id}
                                     </span>
                                 </p>
-                            <Link href="/sales" className='px-4 py-2 bg-[#D64979] text-white text-sm rounded'>Details</Link>
-                        </div>
+                                <Link href="/sales" className='px-4 py-2 bg-[#D64979] text-white text-sm rounded'>Details</Link>
+                            </div>
                         ))}
-                        
-                        
+
+
                     </div>
-                    
+
                 </div>
 
             </div>
